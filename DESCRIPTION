@@ -1,0 +1,21 @@
+Package: Online2SpamH
+Title: Apply Online 2SpamH algorithm 
+Version: 0.1
+Authors@R: 
+    person("Sebastian", "Brylka", , "seb4012@med.cornell.edu", role = c("aut", "cre"))
+Description: The package applies the 2SpamH algorithm to the passively collected variable and assigns it a "Missing" or "Non-missing" label based on auxiliary device usage and sensor activity information.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports: 
+    class,
+    dplyr,
+    ggplot2,
+    imputeTS
+Depends: 
+    R (>= 3.5)
+LazyData: true
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
