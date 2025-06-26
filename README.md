@@ -7,7 +7,7 @@ The method employs a **self-supervised approach** to infer missing data labels f
 - **Automated thresholding**: No need to manually define "low" and "high" levels of device usage or sensor activity.
 - **Online implementation**: Supports real-time data processing as new data is collected.
 - **Confidence scoring**: Quantifies the confidence of each "Missing"/"Non-missing" label.
-- **Improved usability**: Enhanced variable naming and visualizations for easier interpretation and integration.
+- **Improved usability**: Updated variable naming and visualizations for easier interpretation and integration.
 
 **Manuscript**: *COMING SOON*
 
@@ -52,8 +52,8 @@ Online2SpamH::Online_TwoSpamH(
 
 ```
 **Inputs**:
-* `new_data` -
-* `training_data` - 
+* `new_data` - Data frame with a single new observation to be labeled as "Missing" or "Non-missing".
+* `training_data` - Output of `TwoSpamH_train()` function (data frame with "Missing"/"Non-missing" labels).
 * `passive_variable` - Name of a variable (column) in `new_data` representing a passively collected variable to be labeled as "Missing" or "Non-missing" (e.g., step count).
 * `phone_usage_vars` - Name (or vector of names) of variables in `new_data` representing device usage (e.g., battery variance, screen unlocks, device notifications).
 * `activity_level_vars` - Name (or vector of names) of variables in `new_data` representing sensor activity (e.g., number of uploads to the server)
@@ -61,7 +61,7 @@ Online2SpamH::Online_TwoSpamH(
 
 **Output**: The new observation `new_data` data frame with `label` column representing "Missing"/"Non-missing" label.
 
-### Example
+### Full Example
 
 ```
 data <- Online2SpamH::example_data
@@ -92,3 +92,36 @@ Online2SpamH::Online_TwoSpamH(
 )
 
 ```
+---
+
+### `TwoSpamH()`
+
+Original 2SpamH function with updated variable naming and visualizations; requires the choice of thresholds for "low" and "high" phone usage and sensor activity.
+
+```
+Online2SpamH::TwoSpamH(
+  data = data, 
+  passive_variable = passive_variable, 
+  phone_usage_vars = phone_usage_vars, 
+  activity_level_vars = activity_level_vars,
+  thresholds = data.frame( 
+    lower_bound_phone_usage = 0.2, 
+    upper_bound_phone_usage = 0.8, 
+    lower_bound_activity_level = 0.3,
+    upper_bound_activity_level = 0.7),
+  plot.data = T
+)
+```
+
+**Inputs**:
+* `data` - Data frame with auxiliary device usage information of a single user aggregated over a pre-specified time interval (e.g., daily). The example dataset can be accessed from `data/example_data.rda`.
+* `passive_variable` - Name of a variable (column) in the data representing a passively collected variable to be labeled as "Missing" or "Non-missing" (e.g., step count).
+* `phone_usage_vars` - Name (or vector of names) of variables in the data representing device usage (e.g., battery variance, screen unlocks, device notifications).
+* `activity_level_vars` - Name (or vector of names) of variables in the data representing sensor activity (e.g., number of uploads to the server)
+* `thresholds` - Data frame representing lower and upper bounds for "low" and "high" phone usage and sensor activity with the following format and default values: `data.frame(lower_bound_phone_usage = 0.3, upper_bound_phone_usage = 0.7, lower_bound_activity_level = 0.3, upper_bound_activity_level = 0.7)`.
+* `plot.data` - Boolean, whether to show the plot with labeled data.
+
+**Output**: The original data frame with `label` column representing "Missing"/"Non-missing" label.
+
+---
+Please contact seb4012@med.cornell.edu with any questions.
