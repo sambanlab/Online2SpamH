@@ -12,7 +12,7 @@ utils::globalVariables(c(
 #' @param thresholds data frame with thresholds for activity level and phone usage (look at examples for formatting)
 #' @param num.neighbor number of neighbors for KNN algorithm
 #' @param check.cor change to correlation value (if correlation between phone usage and activity level is above this value, use only one of them to avoid overfitting) 
-#' @param plot.data Boolean whether to plot the data
+#' @param plot.data Boolean whether to plot the data 
 #' @param seed set seed 
 #'
 #' @return original dataset with column 'label' with "Missing"/"Non-missing" values
@@ -455,6 +455,10 @@ Online_TwoSpamH <- function(new_data,
   ## input variables must be strings
   if(!all(sapply(list(passive_variable, phone_usage_vars, activity_level_vars), is.character))){
     stop('passive_variable, phone_usage_vars, activity_level_vars must be character vectors')
+  }
+  ## new_data can only have one observation (one row)
+  if(nrow(new_data) != 1){
+    stop("new_data must have only one row")
   }
   ## all variables of new_data must be included in training data
   if(length(colnames(new_data)) != length(colnames(training_data)) - 1){ ## if the number of variables differs (subtract 1 from training data for 'label' column which is not used)
