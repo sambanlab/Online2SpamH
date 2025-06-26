@@ -5,20 +5,20 @@ utils::globalVariables(c(
 
 #' TwoSpamH
 #' 
-#' @param data data frame to run 2SpamH on
-#' @param passive_variable name of variable to be marked as missing or non-missing
+#' @param data dataset to run 2SpamH on
+#' @param passive_variable passive variable name to be labeled as missing or non-missing
 #' @param phone_usage_vars vector of strings of phone usage variable names from data
 #' @param activity_level_vars vector of strings of activity level variable names from data
-#' @param thresholds data frame with thresholds for activity level and phone usage
-#' @param num.neighbor neighbors for KNN algorithm
-#' @param check.cor change to correlation value (max correlation of phone usage and activity level vectors for knn training) 
-#' @param plot.data whether to plot the data
-#' @param seed set seed
+#' @param thresholds data frame with thresholds for activity level and phone usage (look at examples for formatting)
+#' @param num.neighbor number of neighbors for KNN algorithm
+#' @param check.cor change to correlation value (if correlation between phone usage and activity level is above this value, use only one of them to avoid overfitting) 
+#' @param plot.data Boolean whether to plot the data
+#' @param seed set seed 
 #'
 #' @return original dataset with column 'label' with "Missing"/"Non-missing" values
 #'
 #' @description
-#' A function to run 2SpamH algorithm and identify all observations in data frame as "Missing" or "Non-missing"
+#' A function to run 2SpamH algorithm and identify all observations in data frame as "Missing" or "Non-missing" with pre-defined set of thresholds
 #' 
 #' @importFrom dplyr select mutate mutate_if %>% case_when filter pull
 #' @importFrom imputeTS na_mean
@@ -103,7 +103,7 @@ TwoSpamH <- function(data,
     cor.thresh = check.cor
   }
   
-  ## input variables must be strings
+  ## input variables must be strings representing variable names in data frame
   if(!all(sapply(list(passive_variable, phone_usage_vars, activity_level_vars), is.character))){
     stop('passive_variable, phone_usage_vars, activity_level_vars must be character vectors')
   }
@@ -114,9 +114,8 @@ TwoSpamH <- function(data,
   ## dealing with missing data among variables of interest
   all_vars <- c(phone_usage_vars, activity_level_vars, passive_variable)
   data <- data %>% 
-    dplyr::select(all_of(all_vars)) %>%
-    ## filter(if_all(all_of(all_vars), ~ !is.na(.))) ## Option 1: filter out observations with NA values
-    dplyr::mutate_if(is.numeric, imputeTS::na_mean) ## Option 2: replace NA values with mean
+    dplyr::select(all_of(all_vars)) %>% ## choose only variables of interest
+    dplyr::mutate_if(is.numeric, imputeTS::na_mean) ## replace NA values with mean
   
   ## PCA + scaling of phone usage variables (if there is just one variable, it is just scaling)
   phone_usage <- data %>% dplyr::select(all_of(phone_usage_vars))
@@ -136,21 +135,19 @@ TwoSpamH <- function(data,
   high_activity_level <- activity_level >= quantile(activity_level, thresholds$upper_bound_activity_level)
   high <- high_phone_usage & high_activity_level
   
-  # data with only passive variable to be labeled, phone usage, activity level vectors and label after threshold filtering
+  # label high confidence points as missing or non-missing
   data <- data %>%
     dplyr::mutate(label_old = dplyr::case_when( low ~ "Missing",
                                   high ~ "Non Missing",
-                                  TRUE ~ NA)) %>% ## label points if they are below or above thresholds (points in blue and red zones)
+                                  TRUE ~ NA)) %>% ## if not high confidence (not in red or blue areas), leave as NA 
     dplyr::mutate_if(function(x){is.numeric(x) & length(unique(x)) != 1}, scale) ## scale the numeric columns for knn training
   
   
-  
-  if(delete.cor){ ## if we want to check for high correlations
-    ## if there is a high correlation between phone usage and activity level, delete one of them
-    if(cor(phone_usage, activity_level) > cor.thresh){
+  ## prepare data for self-supervised training with knn
+  if(delete.cor){ ## if we check for high correlation between phone usage and activity level vectors
+    if(cor(phone_usage, activity_level) > cor.thresh){ ## if there is a high correlation between phone usage and activity level vectors, use only one of them for knn
       data.training <- data %>% dplyr::select(all_of(phone_usage_vars)) %>% dplyr::filter(!is.na(label_old)) 
-    } else {
-      ## if columns are not highly correlated, only prepare training data for knn with only initially labeled observations
+    } else { ## if columns are not highly correlated, prepare training data for knn with only initially labeled observations and both vectors
       data.training <- data %>% dplyr::filter(!is.na(label_old))
     }
   } else { ## if we do not check for high correlation
@@ -162,21 +159,21 @@ TwoSpamH <- function(data,
   clusters <- data.training$label_old
   data.training <- data.training %>% dplyr::select(all_of(c(phone_usage_vars, activity_level_vars)))
   
-  
+  ## if no training data was produced (no points initially labeled with high confidence)
   if(nrow(data.training) == 0){
     print("2SpamH failed. Choose different thresholds")
     return(NULL)
   }
   
-  
+  ## use knn with high confidence prototypes as training set
   knn <- suppressWarnings(knn(
-    train = data.training, ## train on already labeled points 
+    train = data.training, 
     test = dplyr::select(data,all_of(names(data.training))),
     cl = clusters,
     k = num.neighbor
   ))
   
-  ## if old label (label after thresholding) was NA, assign it a new label from KNN
+  ## assign new labels to observations initially labeled as NA based on KNN training
   data <- data %>%
     dplyr::mutate(label = ifelse(
       !is.na(label_old),
@@ -184,11 +181,12 @@ TwoSpamH <- function(data,
       as.character(knn))
     ) 
   
+  ## append a final label to original data
   og.data <- dplyr::mutate(og.data, label = data$label)
   
+  ## if we want to display a plot
   if(plot.data){
     pass_var <- (og.data %>% dplyr::select(all_of(passive_variable))) %>% pull(1) %>% as.numeric()
-    #return(pass_var)
     lb_pu <- quantile(phone_usage, thresholds$lower_bound_phone_usage)[[1]]
     ub_pu <- quantile(phone_usage, thresholds$upper_bound_phone_usage)[[1]]
     lb_al <- quantile(activity_level, thresholds$lower_bound_activity_level)[[1]]
@@ -203,12 +201,13 @@ TwoSpamH <- function(data,
       theme_minimal() +
       theme(
         #legend.position = "none",
-        axis.line = element_blank(),  # hide axis-only lines
-        panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8)  # add full box outline
+        axis.line = element_blank(),  
+        panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8)  
       )
     print(plot)
   }
   
+  ## return original data with new column 'label' with "Missing"/"Non-missing" label
   return(og.data)
   
 }
@@ -216,14 +215,14 @@ TwoSpamH <- function(data,
 
 #' TwoSpamH_train
 #'
-#' @param data data frame to run 2SpamH on
+#' @param data dataset to run 2SpamH on
 #' @param passive_variable name of variable to be marked as missing or non-missing
 #' @param phone_usage_vars vector of strings of phone usage variable names from data
 #' @param activity_level_vars vector of strings of activity level variable names from data
-#' @param num.neighbor neighbors for KNN algorithm
+#' @param num.neighbor number of neighbors for KNN algorithm
 #' @param seed set seed
-#' @param plot.data whether to plot data
-#' @param conf if plot.data = TRUE, whether to plot the confidence of point's assignment
+#' @param plot.data boolean whether to plot data
+#' @param conf boolean whether to calculate confidence of label assignment 
 #'
 #' @returns original dataset with column 'label' with "Missing"/"Non-missing" values
 #' 
@@ -281,7 +280,7 @@ TwoSpamH_train <- function(data,
     stop('passive_variable, phone_usage_vars, activity_level_vars must be character vectors')
   }
   
-  ## number of iterations across all thresholds
+  ## track number of iterations across all thresholds
   iter = 0
   
   ## vector to count how many times an observation was classified as 'missing'
@@ -332,8 +331,13 @@ TwoSpamH_train <- function(data,
   ## if over half of the threshold combos classified a point as "Missing", it is set to "Missing"
   data$label <- ifelse(vec > 0.5, "Missing", "Non Missing")
   
+  ## if conf set to true, append a column with label confidence
+  if(conf){
+    data$confidence <- abs(vec-0.5) /.5
+  }
   
   if(plot.data){
+    ## transform variables for plotting
     pass_var <- (data %>% dplyr::select(all_of(passive_variable))) %>% pull(1) %>% as.numeric()
     phone_usage <- data %>% dplyr::select(all_of(phone_usage_vars))
     phone_usage <- princomp(phone_usage %>% scale(), cor = F)$scores[, 1]
@@ -352,7 +356,6 @@ TwoSpamH_train <- function(data,
           panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8)  # add full box outline
         )
     } else {
-      data$confidence <- abs(vec-0.5) /.5
       plot <- data %>%
         ggplot(aes(x = phone_usage, y = activity_level, size = pass_var, colour = label)) +
         labs(x = "Phone Usage", y = "Activity Level", size = gsub("_"," ",passive_variable), colour = "2SpamH Label") +
@@ -393,7 +396,7 @@ TwoSpamH_train <- function(data,
 #' @export
 #' 
 #' @description
-#' Label a new observation as "Missing" or "Non missing" using a training set
+#' Label a new observation as "Missing" or "Non missing" using a training set trained on TwoSpamH_train() function
 #' 
 #' @examples
 #' # Load example data
@@ -453,9 +456,12 @@ Online_TwoSpamH <- function(new_data,
   if(!all(sapply(list(passive_variable, phone_usage_vars, activity_level_vars), is.character))){
     stop('passive_variable, phone_usage_vars, activity_level_vars must be character vectors')
   }
-  ## new observation must have the same column names as training dataframe (except for label column)
-  if(any(sort(colnames(new_data)) != sort(colnames(dplyr::select(training_data, -label)))) == T){
-    stop('new observation has different column names than training dataframe')
+  ## all variables of new_data must be included in training data
+  if(length(colnames(new_data)) != length(colnames(training_data)) - 1){ ## if the number of variables differs (subtract 1 from training data for 'label' column which is not used)
+    missing_cols <- setdiff(colnames(new_data), colnames(training_data))
+    if (length(missing_cols) > 0) { ## if there are some columns in new_data not present in training_data
+      stop(paste("Columns from new_data missing in training_data:", paste(missing_cols, collapse = ", ")))
+    }
   }
   
   ## PCA + scaling of phone usage and activity level variables in train dataset
@@ -471,6 +477,7 @@ Online_TwoSpamH <- function(new_data,
   activity_level_new <- activity_level_new[(nrow(activity_level_train)+1):length(activity_level_new)] ## just one value
   activity_level_train <- princomp(activity_level_train %>% scale(), cor = F)$scores[, 1]
   
+  ## train and test sets for knn algorithm
   train <- data.frame(phone_usage = phone_usage_train, activity_level = activity_level_train)
   test <- data.frame(phone_usage = phone_usage_new, activity_level = activity_level_new)
   

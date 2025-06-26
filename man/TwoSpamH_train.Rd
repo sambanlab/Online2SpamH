@@ -16,7 +16,7 @@ TwoSpamH_train(
 )
 }
 \arguments{
-\item{data}{data frame to run 2SpamH on}
+\item{data}{dataset to run 2SpamH on}
 
 \item{passive_variable}{name of variable to be marked as missing or non-missing}
 
@@ -24,13 +24,13 @@ TwoSpamH_train(
 
 \item{activity_level_vars}{vector of strings of activity level variable names from data}
 
-\item{num.neighbor}{neighbors for KNN algorithm}
+\item{num.neighbor}{number of neighbors for KNN algorithm}
 
 \item{seed}{set seed}
 
-\item{plot.data}{whether to plot data}
+\item{plot.data}{boolean whether to plot data}
 
-\item{conf}{if plot.data = TRUE, whether to plot the confidence of point's assignment}
+\item{conf}{boolean whether to calculate confidence of label assignment}
 }
 \value{
 original dataset with column 'label' with "Missing"/"Non-missing" values

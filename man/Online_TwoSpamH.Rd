@@ -36,7 +36,7 @@ Online_TwoSpamH(
 new_data observation with "Missing"/"Non-missing" label assignment
 }
 \description{
-Label a new observation as "Missing" or "Non missing" using a training set
+Label a new observation as "Missing" or "Non missing" using a training set trained on TwoSpamH_train() function
 }
 \examples{
 # Load example data

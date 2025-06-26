@@ -8,6 +8,14 @@
 \description{
 The package applies the 2SpamH algorithm to the passively collected variable and assigns it a "Missing" or "Non-missing" label based on auxiliary device usage and sensor activity information.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/sambanlab/Online2SpamH}
+  \item Report bugs at \url{https://github.com/sambanlab/Online2SpamH/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Sebastian Brylka \email{seb4012@med.cornell.edu}
 

@@ -18,21 +18,21 @@ TwoSpamH(
 )
 }
 \arguments{
-\item{data}{data frame to run 2SpamH on}
+\item{data}{dataset to run 2SpamH on}
 
-\item{passive_variable}{name of variable to be marked as missing or non-missing}
+\item{passive_variable}{passive variable name to be labeled as missing or non-missing}
 
 \item{phone_usage_vars}{vector of strings of phone usage variable names from data}
 
 \item{activity_level_vars}{vector of strings of activity level variable names from data}
 
-\item{thresholds}{data frame with thresholds for activity level and phone usage}
+\item{thresholds}{data frame with thresholds for activity level and phone usage (look at examples for formatting)}
 
-\item{num.neighbor}{neighbors for KNN algorithm}
+\item{num.neighbor}{number of neighbors for KNN algorithm}
 
-\item{check.cor}{change to correlation value (max correlation of phone usage and activity level vectors for knn training)}
+\item{check.cor}{change to correlation value (if correlation between phone usage and activity level is above this value, use only one of them to avoid overfitting)}
 
-\item{plot.data}{whether to plot the data}
+\item{plot.data}{Boolean whether to plot the data}
 
 \item{seed}{set seed}
 }
@@ -40,7 +40,7 @@ TwoSpamH(
 original dataset with column 'label' with "Missing"/"Non-missing" values
 }
 \description{
-A function to run 2SpamH algorithm and identify all observations in data frame as "Missing" or "Non-missing"
+A function to run 2SpamH algorithm and identify all observations in data frame as "Missing" or "Non-missing" with pre-defined set of thresholds
 }
 \examples{
 # Load example data
