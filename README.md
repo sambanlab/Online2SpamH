@@ -23,6 +23,7 @@ Online2SpamH::TwoSpamH_train(
   passive_variable = "step_count", 
   phone_usage_vars = c("battery_var", "screen_unlocks", "device_notification"), 
   activity_level_vars = "num_uploads",
+  method = "majority_vote",
   plot.data = T,
   conf = F
 )
@@ -32,6 +33,7 @@ Online2SpamH::TwoSpamH_train(
 * `passive_variable` - Name of a variable (column) in the data representing a passively collected variable to be labeled as "Missing" or "Non-missing" (e.g., step count).
 * `phone_usage_vars` - Name (or vector of names) of variables in the data representing device usage (e.g., battery variance, screen unlocks, device notifications).
 * `activity_level_vars` - Name (or vector of names) of variables in the data representing sensor activity (e.g., number of uploads to the server)
+* `method` - Label assignment method to use; "majority_vote" (default) or "optimal_thresholds" - check manuscript for details
 * `plot.data` - Boolean, whether to show the plot with labeled data.
 * `conf` - Boolean, whether to calculate the confidence of "Missing"/"Non-missing" label assignment.
 
@@ -71,6 +73,7 @@ training_data <- Online2SpamH::TwoSpamH_train(
   passive_variable = "step_count", 
   phone_usage_vars = c("battery_var", "screen_unlocks", "device_notification"), 
   activity_level_vars = "num_uploads",
+  method = "majority_vote",
   plot.data = F,
   conf = F
 )

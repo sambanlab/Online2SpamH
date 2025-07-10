@@ -19,21 +19,22 @@ test_that("TwoSpamH works", {
     ),
     plot.data = FALSE
   )[86, ]
-  
+
   expect_equal(a$step_count, 4664)
   expect_equal(a$label, "Non Missing")
 })
 
-test_that("Training works", {
+test_that("Training with majority vote works", {
   b <- TwoSpamH_train(
     data = example_data,
+    method = "majority_vote",
     passive_variable = passive_variable,
     phone_usage_vars = phone_usage_vars,
     activity_level_vars = activity_level_vars,
     num.neighbor = 5,
     plot.data = FALSE
   )[88, ]
-  
+
   expect_equal(b$step_count, 2174)
   expect_equal(b$label, "Non Missing")
 })
@@ -46,14 +47,14 @@ test_that("Online 2SpamH works", {
     activity_level_vars = activity_level_vars,
     plot.data = FALSE
   )
-  
+
   new_data <- data.frame(
     step_count = 3400,
     n_uploads = 90,
     screen_unlocks = 25,
     display_events = 130
   )
-  
+
   c <- Online_TwoSpamH(
     new_data = new_data,
     training_data = train,
@@ -62,7 +63,24 @@ test_that("Online 2SpamH works", {
     activity_level_vars = activity_level_vars,
     plot.data = FALSE
   )
-  
+
   expect_equal(c$label, "Non Missing")
 })
 
+test_that("Training with optimal thresholds works", {
+
+  expect_output(
+    d <- TwoSpamH_train(
+      data = example_data,
+      method = "optimal_thresholds",
+      passive_variable = passive_variable,
+      phone_usage_vars = phone_usage_vars,
+      activity_level_vars = activity_level_vars,
+      plot.data = FALSE
+    ),
+    regexp = "0\\.4.*0\\.7.*0\\.2.*0\\.7"
+  )
+
+  expect_equal(d$label[86], "Non Missing")
+
+})

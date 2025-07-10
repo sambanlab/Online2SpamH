@@ -1,6 +1,6 @@
 Package: Online2SpamH
 Title: Apply Online 2SpamH algorithm 
-Version: 0.1
+Version: 1.0
 Authors@R: 
     person("Sebastian", "Brylka", , "seb4012@med.cornell.edu", role = c("aut", "cre"))
 Description: The package applies the 2SpamH algorithm to the passively collected variable and assigns it a "Missing" or "Non-missing" label based on auxiliary device usage and sensor activity information.

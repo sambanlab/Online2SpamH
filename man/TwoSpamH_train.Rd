@@ -9,6 +9,7 @@ TwoSpamH_train(
   passive_variable,
   phone_usage_vars,
   activity_level_vars,
+  method = "majority_vote",
   num.neighbor = 5,
   seed = NULL,
   plot.data = F,
@@ -23,6 +24,8 @@ TwoSpamH_train(
 \item{phone_usage_vars}{vector of strings of phone usage variable names from data}
 
 \item{activity_level_vars}{vector of strings of activity level variable names from data}
+
+\item{method}{"majority_vote" (default) or "optimal_thresholds", 2SpamH method to use (details in manuscript)}
 
 \item{num.neighbor}{number of neighbors for KNN algorithm}
 
@@ -54,6 +57,7 @@ TwoSpamH_train(
   passive_variable = passive_variable,
   phone_usage_vars = phone_usage_vars,
   activity_level_vars = activity_level_vars,
+  method = "majority_vote",
   plot.data = TRUE
 )
 
