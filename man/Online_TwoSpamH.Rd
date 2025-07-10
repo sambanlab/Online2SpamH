@@ -16,11 +16,11 @@ Online_TwoSpamH(
 )
 }
 \arguments{
-\item{new_data}{A data frame with a single new observation to be labeled as "Missing" or "Non-missing" based on the data trained with 'TwoSpamH_train()' function.}
+\item{new_data}{A data frame with a single new observation to be labeled as "Missing" or "Non-missing".}
 
 \item{training_data}{A data frame processed by a 'TwoSpamH_train()' function.}
 
-\item{passive_variable}{A passive variable name to be labeled as missing or non-missing.}
+\item{passive_variable}{A passive variable name to be labeled as "Missing" or "Non-missing".}
 
 \item{phone_usage_vars}{A vector of strings of phone usage variable names from data.}
 

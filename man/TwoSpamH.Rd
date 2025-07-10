@@ -20,7 +20,7 @@ TwoSpamH(
 \arguments{
 \item{data}{A data frame containing the variable to be labelled and the variables representing device usage and sensory activity level.}
 
-\item{passive_variable}{A passive variable name to be labeled as missing or non-missing.}
+\item{passive_variable}{A passive variable name to be labeled as "Missing" or "Non-missing".}
 
 \item{phone_usage_vars}{A vector of strings of phone usage variable names from data.}
 
@@ -37,7 +37,7 @@ TwoSpamH(
 \item{seed}{The seed to be set, default is NULL.}
 }
 \value{
-The original input data frame with an additional column 'label' representing observation's "Missing"/"Non missing" status.
+The original input data frame with an additional 'label' column representing observation's "Missing"/"Non missing" status.
 }
 \description{
 A function to run 2SpamH algorithm that assigns all observations in data frame a "Missing" or "Non-missing" label using a pre-defined set of lower and upper thresholds.

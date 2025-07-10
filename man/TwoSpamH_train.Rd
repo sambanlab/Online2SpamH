@@ -19,7 +19,7 @@ TwoSpamH_train(
 \arguments{
 \item{data}{A data frame containing the variable to be labelled and the variables representing device usage and sensory activity level.}
 
-\item{passive_variable}{A passive variable name to be labeled as missing or non-missing.}
+\item{passive_variable}{A passive variable name to be labeled as "Missing" or "Non-missing".}
 
 \item{phone_usage_vars}{A vector of strings of phone usage variable names from data.}
 
@@ -33,7 +33,7 @@ TwoSpamH_train(
 
 \item{plot.data}{Whether to plot the data, default is FALSE.}
 
-\item{conf}{Whether to calculate confidence of label assignment, append it to original data frame, default is FALSE.}
+\item{conf}{Whether to calculate the confidence of label assignment and append it to the original data frame, default is FALSE.}
 }
 \value{
 The original input data frame with an additional column 'label' representing observation's "Missing"/"Non missing" status.

@@ -6,7 +6,7 @@ utils::globalVariables(c(
 #' TwoSpamH
 #'
 #' @param data A data frame containing the variable to be labelled and the variables representing device usage and sensory activity level.
-#' @param passive_variable A passive variable name to be labeled as missing or non-missing.
+#' @param passive_variable A passive variable name to be labeled as "Missing" or "Non-missing".
 #' @param phone_usage_vars A vector of strings of phone usage variable names from data.
 #' @param activity_level_vars A vector of strings of activity level variable names from data.
 #' @param thresholds A data frame with lower and upper thresholds for device usage and sensor activity level (look at examples for formatting).
@@ -15,7 +15,7 @@ utils::globalVariables(c(
 #' @param plot.data Whether to plot the data, default is FALSE.
 #' @param seed The seed to be set, default is NULL.
 #'
-#' @return The original input data frame with an additional column 'label' representing observation's "Missing"/"Non missing" status.
+#' @return The original input data frame with an additional 'label' column representing observation's "Missing"/"Non missing" status.
 #'
 #' @description
 #' A function to run 2SpamH algorithm that assigns all observations in data frame a "Missing" or "Non-missing" label using a pre-defined set of lower and upper thresholds.
@@ -216,14 +216,14 @@ TwoSpamH <- function(data,
 #' TwoSpamH_train
 #'
 #' @param data A data frame containing the variable to be labelled and the variables representing device usage and sensory activity level.
-#' @param passive_variable A passive variable name to be labeled as missing or non-missing.
+#' @param passive_variable A passive variable name to be labeled as "Missing" or "Non-missing".
 #' @param phone_usage_vars A vector of strings of phone usage variable names from data.
 #' @param activity_level_vars A vector of strings of activity level variable names from data.
 #' @param method Which Online2SpamH method to use. Choose from "majority_vote" (default) or "optimal_thresholds".
 #' @param num.neighbor A number of neighbors considered by each initially unlabeled data point in KNN algorithm.
 #' @param seed The seed to be set, default is NULL.
 #' @param plot.data Whether to plot the data, default is FALSE.
-#' @param conf Whether to calculate confidence of label assignment, append it to original data frame, default is FALSE.
+#' @param conf Whether to calculate the confidence of label assignment and append it to the original data frame, default is FALSE.
 #'
 #' @returns The original input data frame with an additional column 'label' representing observation's "Missing"/"Non missing" status.
 #'
@@ -582,9 +582,9 @@ TwoSpamH_train <- function(data,
 
 #' Online_TwoSpamH
 #'
-#' @param new_data A data frame with a single new observation to be labeled as "Missing" or "Non-missing" based on the data trained with 'TwoSpamH_train()' function.
+#' @param new_data A data frame with a single new observation to be labeled as "Missing" or "Non-missing".
 #' @param training_data A data frame processed by a 'TwoSpamH_train()' function.
-#' @param passive_variable A passive variable name to be labeled as missing or non-missing.
+#' @param passive_variable A passive variable name to be labeled as "Missing" or "Non-missing".
 #' @param phone_usage_vars A vector of strings of phone usage variable names from data.
 #' @param activity_level_vars A vector of strings of activity level variable names from data.
 #' @param num.neighbor A number of neighbors considered by each initially unlabeled data point in KNN algorithm.
