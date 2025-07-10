@@ -6,7 +6,7 @@
 \alias{Online2SpamH-package}
 \title{Online2SpamH: Apply Online 2SpamH algorithm}
 \description{
-The package applies the 2SpamH algorithm to the passively collected variable and assigns it a "Missing" or "Non-missing" label based on auxiliary device usage and sensor activity information.
+A two-stage algorithm for processing passively sensed mHealth data that uses auxiliary device usage and sensor activity information to determine device-use status, with non-use classified as “Missing” and use as “Non-Missing”.
 }
 \seealso{
 Useful links:

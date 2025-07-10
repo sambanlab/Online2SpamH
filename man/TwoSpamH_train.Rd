@@ -17,29 +17,29 @@ TwoSpamH_train(
 )
 }
 \arguments{
-\item{data}{dataset to run 2SpamH on}
+\item{data}{A data frame containing the variable to be labelled and the variables representing device usage and sensory activity level.}
 
-\item{passive_variable}{name of variable to be marked as missing or non-missing}
+\item{passive_variable}{A passive variable name to be labeled as missing or non-missing.}
 
-\item{phone_usage_vars}{vector of strings of phone usage variable names from data}
+\item{phone_usage_vars}{A vector of strings of phone usage variable names from data.}
 
-\item{activity_level_vars}{vector of strings of activity level variable names from data}
+\item{activity_level_vars}{A vector of strings of activity level variable names from data.}
 
-\item{method}{"majority_vote" (default) or "optimal_thresholds", 2SpamH method to use (details in manuscript)}
+\item{method}{Which Online2SpamH method to use. Choose from "majority_vote" (default) or "optimal_thresholds".}
 
-\item{num.neighbor}{number of neighbors for KNN algorithm}
+\item{num.neighbor}{A number of neighbors considered by each initially unlabeled data point in KNN algorithm.}
 
-\item{seed}{set seed}
+\item{seed}{The seed to be set, default is NULL.}
 
-\item{plot.data}{boolean whether to plot data}
+\item{plot.data}{Whether to plot the data, default is FALSE.}
 
-\item{conf}{boolean whether to calculate confidence of label assignment}
+\item{conf}{Whether to calculate confidence of label assignment, append it to original data frame, default is FALSE.}
 }
 \value{
-original dataset with column 'label' with "Missing"/"Non-missing" values
+The original input data frame with an additional column 'label' representing observation's "Missing"/"Non missing" status.
 }
 \description{
-A function to train a dataset by assigning 2SpamH labels to all observations using a Majority Vote method
+A function to train the model by assigning "Missing"/"Non missing" labels to all available observations. By default, it uses a Majority Vote method - check manuscript for details.
 }
 \examples{
 # Load example data

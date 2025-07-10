@@ -18,29 +18,29 @@ TwoSpamH(
 )
 }
 \arguments{
-\item{data}{dataset to run 2SpamH on}
+\item{data}{A data frame containing the variable to be labelled and the variables representing device usage and sensory activity level.}
 
-\item{passive_variable}{passive variable name to be labeled as missing or non-missing}
+\item{passive_variable}{A passive variable name to be labeled as missing or non-missing.}
 
-\item{phone_usage_vars}{vector of strings of phone usage variable names from data}
+\item{phone_usage_vars}{A vector of strings of phone usage variable names from data.}
 
-\item{activity_level_vars}{vector of strings of activity level variable names from data}
+\item{activity_level_vars}{A vector of strings of activity level variable names from data.}
 
-\item{thresholds}{data frame with thresholds for activity level and phone usage (look at examples for formatting)}
+\item{thresholds}{A data frame with lower and upper thresholds for device usage and sensor activity level (look at examples for formatting).}
 
-\item{num.neighbor}{number of neighbors for KNN algorithm}
+\item{num.neighbor}{A number of neighbors considered by each initially unlabeled data point in KNN algorithm.}
 
-\item{check.cor}{change to correlation value (if correlation between phone usage and activity level is above this value, use only one of them to avoid overfitting)}
+\item{check.cor}{Whether to remove one of the device usage or sensor activity vectors if they are highly correlated. If no, input should be NULL (default). If yes, input should be the correlation threshold for variables to be removed.}
 
-\item{plot.data}{Boolean whether to plot the data}
+\item{plot.data}{Whether to plot the data, default is FALSE.}
 
-\item{seed}{set seed}
+\item{seed}{The seed to be set, default is NULL.}
 }
 \value{
-original dataset with column 'label' with "Missing"/"Non-missing" values
+The original input data frame with an additional column 'label' representing observation's "Missing"/"Non missing" status.
 }
 \description{
-A function to run 2SpamH algorithm and identify all observations in data frame as "Missing" or "Non-missing" with pre-defined set of thresholds
+A function to run 2SpamH algorithm that assigns all observations in data frame a "Missing" or "Non-missing" label using a pre-defined set of lower and upper thresholds.
 }
 \examples{
 # Load example data

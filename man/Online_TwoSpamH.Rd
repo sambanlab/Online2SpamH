@@ -16,27 +16,27 @@ Online_TwoSpamH(
 )
 }
 \arguments{
-\item{new_data}{new observation to be labeled as "Missing" or "Non-missing" based on the training data}
+\item{new_data}{A data frame with a single new observation to be labeled as "Missing" or "Non-missing" based on the data trained with 'TwoSpamH_train()' function.}
 
-\item{training_data}{training dataset after TwoSpamH_train() function}
+\item{training_data}{A data frame processed by a 'TwoSpamH_train()' function.}
 
-\item{passive_variable}{name of variable to be marked as missing or non-missing}
+\item{passive_variable}{A passive variable name to be labeled as missing or non-missing.}
 
-\item{phone_usage_vars}{vector of strings of phone usage variable names from data}
+\item{phone_usage_vars}{A vector of strings of phone usage variable names from data.}
 
-\item{activity_level_vars}{vector of strings of activity level variable names from data}
+\item{activity_level_vars}{A vector of strings of activity level variable names from data.}
 
-\item{num.neighbor}{neighbors for KNN algorithm}
+\item{num.neighbor}{A number of neighbors considered by each initially unlabeled data point in KNN algorithm.}
 
-\item{seed}{set seed}
+\item{seed}{The seed to be set, default is NULL.}
 
-\item{plot.data}{whether to plot a data with new observation}
+\item{plot.data}{Whether to plot the data with labeled and highlighted new observation, default is FALSE.}
 }
 \value{
-new_data observation with "Missing"/"Non-missing" label assignment
+A new_data data frame with "Missing"/"Non-missing" label assignment.
 }
 \description{
-Label a new observation as "Missing" or "Non missing" using a training set trained on TwoSpamH_train() function
+A function to label a new observation as "Missing" or "Non missing" using a training set trained with 'TwoSpamH_train()' function.
 }
 \examples{
 # Load example data

@@ -1,8 +1,8 @@
 #' Example Step Count Dataset
 #'
-#' A dataset containing passive sensing features from the Alacrity study.
+#' An example mHealth dataset collected from an elderly patient with major depressive disorder by Weill Cornell Advanced Laboratory for Accelerating the Reach and Impact of Treatment for Mid- and Late-Life Depression (ALACRITY) Research Center
 #'
-#' @format A data frame with `n` rows and the following columns:
+#' @format A data frame with 88 rows and the following columns:
 #' \describe{
 #'   \item{step_count}{Number of steps per day}
 #'   \item{n_uploads}{Number of sensor uploads to the server}
